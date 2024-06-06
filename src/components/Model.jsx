@@ -38,12 +38,12 @@ export default function Model({ activeMenu }) {
 
   useEffect(() => {
     if (activeMenu != null && textures[activeMenu]) {
-      plane.current.material.uniforms.uTexture.value = textures[activeMenu];
+      const texture = new THREE.TextureLoader().load(textures[activeMenu]);
+      texture.needsUpdate = true; // Ensure the texture is updated on load
+      plane.current.material.uniforms.uTexture.value = texture;
       animate(opacity, 1, { duration: 0.2, onUpdate: latest => plane.current.material.uniforms.uAlpha.value = latest });
     } else {
-      // Handle case where activeMenu is invalid or texture is not available
-      // Reset the texture value or handle the error accordingly
-      plane.current.material.uniforms.uTexture.value = null; // Or handle error
+      plane.current.material.uniforms.uTexture.value = null;
       animate(opacity, 0, { duration: 0.2, onUpdate: latest => plane.current.material.uniforms.uAlpha.value = latest });
     }
   }, [activeMenu, opacity, textures]);
