@@ -19,7 +19,7 @@ export default function Model({ activeMenu }) {
   const textures = useMemo(() => projects.map(project => project.src), [projects]);
 
   // Get width and height from the first texture
-  const { width, height } = textures[0].image;
+  const { width, height } = textures[0]?.image || { width: 0, height: 0 };
 
   const lerp = (x, y, a) => x * (1 - a) + y * a;
 
