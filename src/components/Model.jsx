@@ -7,6 +7,7 @@ import { useAspect } from '@react-three/drei';
 import useMouse from './useMouse';
 import useDimension from './useDimension';
 import { projects } from './data';
+import * as THREE from "three";
 
 export default function Model({ activeMenu }) {
   const plane = useRef();
