@@ -18,11 +18,13 @@ export default function Model({ activeMenu }) {
   // Precompute textures outside the map function for better performance
   const textures = useMemo(() => projects.map(project => project.src), [projects]);
 
-  // Get width and height from the first texture
-  const { width, height } = textures[0]?.image || { width: 0, height: 0 };
+  // Get width and height from the first texture, with error handling
+  const firstTexture = textures[0]?.image || { width: 0, height: 0 };
+  const { width, height } = firstTexture;
 
   const lerp = (x, y, a) => x * (1 - a) + y * a;
 
+  // Ensure scale calculation does not use invalid dimensions
   const scale = useAspect(
     width + 900,
     height,
@@ -36,8 +38,11 @@ export default function Model({ activeMenu }) {
 
   useEffect(() => {
     if (activeMenu != null) {
-      plane.current.material.uniforms.uTexture.value = textures[activeMenu];
-      animate(opacity, 1, { duration: 0.2, onUpdate: latest => plane.current.material.uniforms.uAlpha.value = latest });
+      // Ensure activeMenu is within bounds
+      if (activeMenu >= 0 && activeMenu < textures.length) {
+        plane.current.material.uniforms.uTexture.value = textures[activeMenu];
+        animate(opacity, 1, { duration: 0.2, onUpdate: latest => plane.current.material.uniforms.uAlpha.value = latest });
+      }
     } else {
       animate(opacity, 0, { duration: 0.2, onUpdate: latest => plane.current.material.uniforms.uAlpha.value = latest });
     }
