@@ -16,9 +16,7 @@ export default function Model({ activeMenu }) {
   const opacity = useMotionValue(0);
 
   // Precompute textures outside the map function for better performance
-  const textures = useMemo(() => {
-    return projects.map(project => project.src); // Using array for textures
-  }, [projects]);
+  const textures = useMemo(() => projects.map(project => project.src), [projects]);
 
   // Get width and height from the first texture, with error handling
   const firstTexture = textures[0]?.image || { width: 0, height: 0 };
