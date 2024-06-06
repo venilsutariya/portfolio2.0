@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { motion } from 'framer-motion-3d';
 import { animate, useMotionValue, useTransform } from 'framer-motion';
@@ -15,12 +15,12 @@ export default function Model({ activeMenu }) {
     const mouse = useMouse();
     const opacity = useMotionValue(0);
 
-    // Extracting useTexture hooks for each project source
-    const textures = projects.map((project, index) => useTexture(project.src));
+    // Precompute textures outside the map function
+    const textures = useMemo(() => projects.map(project => useTexture(project.src)), [projects]);
 
     // Get width and height from the first texture
     const { width, height } = textures[0].image;
-    
+
     const lerp = (x, y, a) => x * (1 - a) + y * a;
 
     const scale = useAspect(
