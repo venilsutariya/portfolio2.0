@@ -20,7 +20,7 @@ export default function Model({activeMenu}) {
     const lerp = (x, y, a) => x * (1 - a) + y * a
 
     const scale = useAspect(
-        width,
+        width + 900,
         height,
         0.225
     )
@@ -68,7 +68,7 @@ export default function Model({activeMenu}) {
     return (
         <motion.mesh position-x={x} position-y={y} ref={plane} scale={scale}>
             <planeGeometry args={[1, 1, 15, 15]}/>
-            {/* <meshBasicMaterial wireframe={true} color="red"/> */}
+            <meshBasicMaterial wireframe={true} color="red"/>
             <shaderMaterial 
                 vertexShader={vertex}
                 fragmentShader={fragment}
