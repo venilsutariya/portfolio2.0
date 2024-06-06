@@ -39,10 +39,20 @@ export default function Model({ activeMenu }) {
 
   useEffect(() => {
     if (activeMenu != null && textures[activeMenu]) {
-      const texture = new THREE.TextureLoader().load(textures[activeMenu]);
-      texture.needsUpdate = true; // Ensure the texture is updated on load
-      plane.current.material.uniforms.uTexture.value = texture;
-      animate(opacity, 1, { duration: 0.2, onUpdate: latest => plane.current.material.uniforms.uAlpha.value = latest });
+      const textureLoader = new THREE.TextureLoader();
+      textureLoader.load(
+        textures[activeMenu],
+        (texture) => {
+          // Update the texture value only when the texture is loaded
+          texture.needsUpdate = true;
+          plane.current.material.uniforms.uTexture.value = texture;
+          animate(opacity, 1, { duration: 0.2, onUpdate: latest => plane.current.material.uniforms.uAlpha.value = latest });
+        },
+        undefined, // onProgress callback
+        (error) => {
+          console.error('An error occurred while loading the texture:', error);
+        }
+      );
     } else {
       plane.current.material.uniforms.uTexture.value = null;
       animate(opacity, 0, { duration: 0.2, onUpdate: latest => plane.current.material.uniforms.uAlpha.value = latest });
