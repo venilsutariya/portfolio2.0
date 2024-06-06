@@ -16,10 +16,15 @@ export default function Model({ activeMenu }) {
   const opacity = useMotionValue(0);
 
   // Precompute textures outside the map function for better performance
-  const textures = useMemo(() => projects.map(project => project.src), [projects]);
+  const textures = useMemo(() => {
+    return projects.map(project => {
+      // Wrap texture data in an object for consistent key type
+      return { texture: project.src };
+    });
+  }, [projects]);
 
   // Get width and height from the first texture, with error handling
-  const firstTexture = textures[0]?.image || { width: 0, height: 0 };
+  const firstTexture = textures[0]?.texture || { width: 0, height: 0 };
   const { width, height } = firstTexture;
 
   const lerp = (x, y, a) => x * (1 - a) + y * a;
@@ -40,7 +45,7 @@ export default function Model({ activeMenu }) {
     if (activeMenu != null) {
       // Ensure activeMenu is within bounds
       if (activeMenu >= 0 && activeMenu < textures.length) {
-        plane.current.material.uniforms.uTexture.value = textures[activeMenu];
+        plane.current.material.uniforms.uTexture.value = textures[activeMenu].texture;
         animate(opacity, 1, { duration: 0.2, onUpdate: latest => plane.current.material.uniforms.uAlpha.value = latest });
       }
     } else {
@@ -51,7 +56,7 @@ export default function Model({ activeMenu }) {
   const uniforms = useRef({
     uDelta: { value: { x: 0, y: 0 } },
     uAmplitude: { value: 0.0005 },
-    uTexture: { value: textures[0] }, // Use pre-computed textures here
+    uTexture: { value: textures[0]?.texture }, // Use pre-computed textures here
     uAlpha: { value: 0 }
   });
 
