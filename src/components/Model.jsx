@@ -37,13 +37,13 @@ export default function Model({ activeMenu }) {
   };
 
   useEffect(() => {
-    if (activeMenu != null) {
-      // Ensure activeMenu is within bounds
-      if (activeMenu >= 0 && activeMenu < textures.length) {
-        plane.current.material.uniforms.uTexture.value = textures[activeMenu];
-        animate(opacity, 1, { duration: 0.2, onUpdate: latest => plane.current.material.uniforms.uAlpha.value = latest });
-      }
+    if (activeMenu != null && textures[activeMenu]) {
+      plane.current.material.uniforms.uTexture.value = textures[activeMenu];
+      animate(opacity, 1, { duration: 0.2, onUpdate: latest => plane.current.material.uniforms.uAlpha.value = latest });
     } else {
+      // Handle case where activeMenu is invalid or texture is not available
+      // Reset the texture value or handle the error accordingly
+      plane.current.material.uniforms.uTexture.value = null; // Or handle error
       animate(opacity, 0, { duration: 0.2, onUpdate: latest => plane.current.material.uniforms.uAlpha.value = latest });
     }
   }, [activeMenu, opacity, textures]);
