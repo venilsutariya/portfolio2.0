@@ -1,12 +1,13 @@
-import React, { useEffect, useRef, useMemo } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { motion } from "framer-motion-3d";
 import { animate, useMotionValue, useTransform } from 'framer-motion';
 import { vertex, fragment } from './Shader';
-import { useTexture, useAspect } from '@react-three/drei';
+import { useAspect } from '@react-three/drei';
 import useMouse from './useMouse';
 import useDimension from './useDimension';
 import { projects } from './data';
+import useProjectTextures from '@/hooks/useProjectTexture'; // Import the custom hook
 
 export default function Model({ activeMenu }) {
 
@@ -16,8 +17,12 @@ export default function Model({ activeMenu }) {
     const mouse = useMouse();
     const opacity = useMotionValue(0);
 
-    // Memoize the textures to ensure useTexture is called correctly
-    const textures = useMemo(() => projects.map(project => useTexture(project.src)), [projects]);
+    // Use the custom hook to load textures
+    const textures = useProjectTextures(projects);
+
+    // If textures are not loaded yet, return null to avoid rendering issues
+    if (!textures.length) return null;
+
     const { width, height } = textures[0].image;
     const lerp = (x, y, a) => x * (1 - a) + y * a;
 
