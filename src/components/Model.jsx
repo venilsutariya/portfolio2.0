@@ -49,7 +49,8 @@ export default function Model({ activeMenu }) {
   const uniforms = useRef({
     uDelta: { value: { x: 0, y: 0 } },
     uAmplitude: { value: 0.0005 },
-    uTexture: { value: textures[0] }, // Use textures state here
+    // Use textures state variable here
+    uTexture: { value: textures[0] }, 
     uAlpha: { value: 0 }
   })
 
