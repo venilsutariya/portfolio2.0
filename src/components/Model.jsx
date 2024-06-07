@@ -8,17 +8,13 @@ import useMouse from './useMouse';
 import useDimension from './useDimension';
 import { projects } from './data';
 
-function useProjectTextures(projects) {
-    return projects.map((project) => useTexture(project.src));
-}
-
 export default function Model({ activeMenu }) {
     const plane = useRef();
     const { viewport } = useThree();
     const dimension = useDimension();
     const mouse = useMouse();
     const opacity = useMotionValue(0);
-    const textures = projects.map((project) => useTexture(project.src)); // Load textures individually
+    const textures = projects.map((project) => useTexture(project.src));
     const lerp = (x, y, a) => x * (1 - a) + y * a;
 
     const scale = useAspect(1000, 800, 0.225);
