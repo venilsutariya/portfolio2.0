@@ -1,32 +1,27 @@
-import React, { useEffect, useRef } from 'react'
-import { useFrame, useThree } from '@react-three/fiber'
-import { motion } from "framer-motion-3d"
-import { animate, useMotionValue, useTransform } from 'framer-motion'
-import { vertex, fragment } from './Shader'
+import React, { useEffect, useRef } from 'react';
+import { useFrame, useThree } from '@react-three/fiber';
+import { motion } from "framer-motion-3d";
+import { animate, useMotionValue, useTransform } from 'framer-motion';
+import { vertex, fragment } from './Shader';
 import { useTexture, useAspect } from '@react-three/drei';
 import useMouse from './useMouse';
 import useDimension from './useDimension';
 import { projects } from './data';
 
 function useProjectTextures(projects) {
-    return projects.map(project => useTexture(project.src));
+    return projects.map((project) => useTexture(project.src));
 }
 
 export default function Model({ activeMenu }) {
-
     const plane = useRef();
     const { viewport } = useThree();
     const dimension = useDimension();
     const mouse = useMouse();
     const opacity = useMotionValue(0);
-    const textures = useProjectTextures(projects);
+    const textures = projects.map((project) => useTexture(project.src)); // Load textures individually
     const lerp = (x, y, a) => x * (1 - a) + y * a;
 
-    const scale = useAspect(
-        1000,
-        800,
-        0.225
-    );
+    const scale = useAspect(1000, 800, 0.225);
     const smoothMouse = {
         x: useMotionValue(0),
         y: useMotionValue(0)
@@ -35,11 +30,11 @@ export default function Model({ activeMenu }) {
     useEffect(() => {
         if (activeMenu != null) {
             plane.current.material.uniforms.uTexture.value = textures[activeMenu];
-            animate(opacity, 1, { duration: 0.2, onUpdate: latest => plane.current.material.uniforms.uAlpha.value = latest });
+            animate(opacity, 1, { duration: 0.2, onUpdate: (latest) => (plane.current.material.uniforms.uAlpha.value = latest) });
         } else {
-            animate(opacity, 0, { duration: 0.2, onUpdate: latest => plane.current.material.uniforms.uAlpha.value = latest });
+            animate(opacity, 0, { duration: 0.2, onUpdate: (latest) => (plane.current.material.uniforms.uAlpha.value = latest) });
         }
-    }, [activeMenu]);
+    }, [activeMenu, opacity, textures]);
 
     const uniforms = useRef({
         uDelta: { value: { x: 0, y: 0 } },
@@ -63,8 +58,8 @@ export default function Model({ activeMenu }) {
         }
     });
 
-    const x = useTransform(smoothMouse.x, [0, dimension.width], [-1 * viewport.width / 2, viewport.width / 2]);
-    const y = useTransform(smoothMouse.y, [0, dimension.height], [viewport.height / 2, -1 * viewport.height / 2]);
+    const x = useTransform(smoothMouse.x, [0, dimension.width], [-viewport.width / 2, viewport.width / 2]);
+    const y = useTransform(smoothMouse.y, [0, dimension.height], [viewport.height / 2, -viewport.height / 2]);
 
     return (
         <motion.mesh position-x={x} position-y={y} ref={plane} scale={scale}>
