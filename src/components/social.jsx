@@ -18,7 +18,7 @@ const Social = () => {
 
     return (
         <div className="flex flex-col justify-center py-44">
-            <div className="flex justify-center opacity-75 gap-x-3 lg:gap-x-10">
+            <div className="flex justify-center opacity-75 gap-x-5 lg:gap-x-10">
                 <button onClick={() => handleSocial("x", "https://twitter.com/SutariyaVenil")} className="hover:underline">
                     X
                 </button>
@@ -30,8 +30,8 @@ const Social = () => {
                 </button>
             </div>
             <div className="flex justify-center mt-10">
-                <a href="https://shilp.co" target="_blank">
-                    <span className="opacity-75 hover:opacity-100 pb-2 transition-all hover:border-b">@shilp.co</span>
+                <a href="https://shilp.co" className="hover:underline" target="_blank">
+                    <span className="opacity-75 bg-gradient-to-tr from-[#22ff9b] via-[#00b91c] to-[#ffff00] text-transparent bg-clip-text font-[500] text-xl hover:opacity-100 pb-2 transition-all">@shilp.co</span>
                 </a>
             </div>
         </div>
